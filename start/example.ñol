@@ -1,0 +1,9 @@
+clase Padre {
+    
+
+}
+
+clase Hijo hereda Padre {
+    
+
+}
