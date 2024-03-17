@@ -12,9 +12,11 @@
 #define chunk_h
 
 #include "common.h"
+#include "value.h"
 
 // one-byte operation codes
 typedef enum {
+    OP_CONSTANT,
     OP_RETURN,
 } OpCode;
 
@@ -24,6 +26,7 @@ typedef struct {
     // the number of elements in the array
     int capacity;
     uint8_t* code;
+    ValueArray constants;
 } Chunk;
 
 // function to initialize a chunk
@@ -32,5 +35,7 @@ void initChunk(Chunk* chunk);
 void writeChunk(Chunk* chunk, uint8_t byte);
 // function to free a chunk
 void freeChunk(Chunk* chunk);
+// function to add a constant to a chunk
+int addConstant(Chunk* chunk, Value value);
 
 #endif /* chunk_h */

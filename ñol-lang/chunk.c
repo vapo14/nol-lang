@@ -11,15 +11,18 @@
 #include "memory.h"
 
 /**
- Function for initializing a chunk.
+    Function for initializing a chunk.
  */
 void initChunk(Chunk* chunk) {
     chunk->count = 0;
     chunk->capacity = 0;
     chunk->code = NULL;
+    initValueArray(&chunk->constants);
 }
 
-
+/**
+    Function for writing a chunk
+ **/
 void writeChunk(Chunk* chunk, uint8_t byte) {
     if (chunk->capacity < chunk->count + 1) {
         int oldCapacity = chunk->capacity;
@@ -31,7 +34,20 @@ void writeChunk(Chunk* chunk, uint8_t byte) {
     chunk->count++;
 }
 
+/**
+    Function for freeing a chunk
+ */
 void freeChunk(Chunk* chunk) {
     FREE_ARRAY(uint8_t, chunk->code, chunk->capacity);
+    freeValueArray(&chunk->constants);
     initChunk(chunk);
+}
+
+/**
+    Function for adding a constant to a chunk
+ */
+int addConstant(Chunk* chunk, Value value) {
+    writeValueArray(&chunk->constants, value);
+    // we want to return the index at which the constant was added
+    return chunk->constants.count - 1;
 }
