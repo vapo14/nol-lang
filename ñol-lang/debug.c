@@ -37,6 +37,14 @@ static int simpleInstruction(const char* name, int offset) {
 
 int disassembleInstruction(Chunk* chunk, int offset) {
     printf("%04d ", offset);
+    // if the offset is not the first instruction and it continues to
+    // be part of the initial instruction (same line) print a pipe.
+    if (offset > 0 && chunk->lines[offset] == chunk->lines[offset - 1]) {
+        // should these whitespaces be dynamic ? what if we have 1000+ lines ?
+        printf("   | ");
+    } else {
+        printf("%4d ", chunk->lines[offset]);
+    }
     
     uint8_t instruction = chunk->code[offset];
     switch (instruction) {

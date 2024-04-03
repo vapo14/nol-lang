@@ -6,7 +6,7 @@
 //
 
 /*
- Sequences of bytecode are referred to as "chunks"
+    Sequences of bytecode are referred to as "chunks"
  */
 #ifndef chunk_h
 #define chunk_h
@@ -26,13 +26,15 @@ typedef struct {
     // the number of elements in the array
     int capacity;
     uint8_t* code;
+    int* lines;
     ValueArray constants;
 } Chunk;
 
 // function to initialize a chunk
 void initChunk(Chunk* chunk);
-// function to append to the end of the chunk
-void writeChunk(Chunk* chunk, uint8_t byte);
+// function to append to the end of the chunk, includes the line
+// that corresponds to the instruction
+void writeChunk(Chunk* chunk, uint8_t byte, int line);
 // function to free a chunk
 void freeChunk(Chunk* chunk);
 // function to add a constant to a chunk
