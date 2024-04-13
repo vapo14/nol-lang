@@ -18,12 +18,34 @@
 **/
 VM vm;
 
+static void resetStack(void) {
+    vm.stackTop = vm.stack;
+}
+
 void initVM(void) {
-    
+    resetStack();
 }
 
 void freeVM(void) {
     
+}
+
+/**
+    We add the value to the current stackTop position then increment the stackTop pointer
+ */
+void push(Value value) {
+    *vm.stackTop = value;
+    vm.stackTop++;
+}
+
+/**
+    Moves the stack pointer back to get the most recent used slot.
+    There's no need to remove the element from the array as it will simply
+    be overwritten by whatever element is added afterwards.
+ */
+Value pop(void) {
+    vm.stackTop--;
+    return *vm.stackTop;
 }
 
 static InterpretResult run(void) {
@@ -32,6 +54,14 @@ static InterpretResult run(void) {
     
     for (;;) {
 #ifdef DEBUG_TRACE_EXECUTION
+        // print each element in the stack
+        printf("         ");
+        for (Value* slot = vm.stack; slot < vm.stackTop; slot++) {
+            printf("[ ");
+            printValue(*slot);
+            printf(" ]");
+        }
+        printf("\n");
         // convert ip back to a relative offset from the beginning of the bytecode to dissasemble
         // the instruction that starts at that byte
         disassembleInstruction(vm.chunk, (int)(vm.ip - vm.chunk->code));
@@ -40,11 +70,13 @@ static InterpretResult run(void) {
         switch (instruction = READ_BYTE()) {
             case OP_CONSTANT: {
                 Value constant = vm.chunk->constants.values[READ_BYTE()];
-                printValue(constant);
-                printf("\n");
+                push(constant);
                 break;
             }
+            case OP_NEGATE: push(-pop()); break;
             case OP_RETURN:
+                printValue(pop());
+                printf("\n");
                 return INTERPRET_OK;
             default:
                 break;

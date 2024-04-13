@@ -21,6 +21,7 @@ int main(int argc, const char * argv[]) {
     writeChunk(&chunk, OP_CONSTANT, 123);
     // here we pass the index as a parameter for the op_constant instruction
     writeChunk(&chunk, constant, 123);
+    writeChunk(&chunk, OP_NEGATE, 123);
     
     
     writeChunk(&chunk, OP_RETURN, 123);

@@ -17,6 +17,7 @@
 // one-byte operation codes
 typedef enum {
     OP_CONSTANT,
+    OP_NEGATE,
     OP_RETURN,
 } OpCode;
 
